@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='index.css')}}" />
+    <title>Document</title>
+
+    <style>
+        #msg {
+            font-size: xx-large;
+            color: blue;
+        }
+        /* #はidを指定 */
+        .chart-board{
+            /* .はclassを指定 */
+            max-width: 80vw;
+            max-height: 50vh;
+        }
+        /* 何もないときは ラベル要素全てに指定する*/
+        label{
+            color:blueviolet;
+            /* */
+        }
+    </style>
+</head>
+
+<body>
+    <div>{{ jikan }}</div>
+    <div>
+        トップページです。
+    </div>
+
+    {# <!-- <a href="{{url_for('menu', )}}">メニューページ</a> --> #}
+
+    <div>
+        <button onclick="btn_click();" class="mybtn">ボタン</button>
+    </div>
+
+    <div>
+        <label id="msg">-</label>
+
+    </div>
+
+    <div class="chart-board">
+        <canvas id="myChart"></canvas>
+    </div>
+
+    <script>
+        let click_count = 0;
+        function btn_click() {
+            // click_count += 1;
+            // console.log(`${click_count}回クリックされた`);
+            // document.getElementById("msg").innerText = click_count;
+
+            let amdno = 12345;
+            let year = 2024;
+            let month = 7;
+            let params = {
+                amdno: amdno,
+                year: year,
+                month: month
+            };
+            const query = new URLSearchParams(params);
+            //二度と変わらないもの 変数が変わらないもの const使うとちょっと処理が速くなる
+            let url_base = "{{url_for('amedas_data')}}"
+            // #関数名を引数にいれる
+
+            //pythonfstringと同じような奴
+            let url = `${url_base}?${query}`;
+
+            //リクエスト発行 letはその中でしか使えない変数
+            let response;
+            let c = new XMLHttpRequest;
+
+
+            c.onload = function () {
+                // === 三つだとより厳密になる
+                if (c.readyState === 4) {
+                    response = c.response;
+                }
+                // }else{}
+            }
+            c.onerror = function () {
+                alert("http request error!!!")
+            }
+            c.open("GET", url, false);
+            c.send();
+
+            returndata = JSON.parse(response);
+            // json.parse 文字列をjson形式に変換してくれる
+
+            console.log(returndata);
+
+        }
+// const 中が変更されない
+        const ctx = document.getElementById('myChart');
+
+// ↓辞書型になってる
+
+    var values =[
+        {x:"2020-02-01",y:100},
+       {x:"2020-02-02",y:200},
+       {x:"2020-02-03",y:300},
+       {x:"2020-02-04",y:400},
+       {x:"2020-02-07",y:200},
+       {x:"2020-02-14",y:600}
+];
+ 
+    var dlg_goods_detail_chart1 = new Chart(ctx, {
+        type: "line",
+        data: {
+          datasets: [{
+            label: "値1",
+            fill: false,
+            borderColor: 'rgba(0, 0, 255, 0.5)',
+            lineTension: 0.1,   //曲線にする度合
+            data: values,
+          }],
+        },
+        options: {
+          spanGaps: true,   //点をつなげる場合
+          scales: {
+            x: {
+              type: 'time',
+              time:{
+                unit: 'week',    //週に線
+                displayFormats: {
+                    week: 'yyyy-MM-dd'
+                }
+              },
+            max:"2020-02-28"
+            }
+          }
+        }
+
+      });
+    //     new Chart(ctx, {
+    //         type: 'line',
+    //         data: {
+    //             labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+    //             datasets: [
+    //                 {
+    //                 label: '# of Votes',
+    //                 data: [12, 19, 3, 5, 2, 3],
+    //                 borderWidth: 1
+    //             },
+    //             {
+    //                 label: '# of Votes2',
+    //                 data: [10, 12, 2, 4, 5, 6],
+    //                 borderWidth: 1
+    //             }
+            
+    //         ]
+    //         },
+    //         options: {
+    //             responsive: true,
+    //             scales: {
+    //                 y: {
+    //                     beginAtZero: true
+    //                 }
+    //             }
+    //         }
+    //     });
+
+
+    </script>
+</body>
+
+</html>

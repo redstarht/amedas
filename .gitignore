@@ -1,0 +1,8 @@
+__pycache__
+.vscode
+*.db
+lesson_venv
+*.xlsx
+*.csv
+*.json
+*.png

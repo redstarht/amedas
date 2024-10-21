@@ -1,0 +1,2 @@
+-- SQLite
+DROP TABLE 名古屋_47636_2024_5;
