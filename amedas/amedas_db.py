@@ -1,4 +1,5 @@
 import sqlite3
+import datetime
 
 
 def dict_factory(cursor, row):
@@ -24,7 +25,7 @@ class AmedasDB():
         self.create_db()
 
     def create_db(self):
-        sql_create_db ='''
+        sql_create_db = '''
         CREATE TABLE IF NOT EXISTS t_weather_log (
             index_nbr INT NOT NULL,
             ymd TEXT NOT NULL,
@@ -57,24 +58,62 @@ class AmedasDB():
             cur.execute(sql_create_db)
             conn.commit()
 
-    def whether_data(self, index_nbr, from_ym, to_ym) -> list:  # ->アノテーション(型宣言/型注釈)
+    def whether_data(self, index_nbr, year, month) -> list:  # ->アノテーション(型宣言/型注釈)
+        from_ymd = datetime.date(year, month, 1)
+        if month == 12:
+            year += 1
+            month = 1
+        else:
+            month += 1
+
+        to_ymd = datetime.date(year, month, 1)
+
         # dateの範囲でデータを取得してくる
         # sql文を動的に作成
-        sql = """
-        SELECT index_nbr,date,temp_average,temp_high,temp_low
+        sql = '''
+        SELECT 
+        index_nbr,
+        ymd,
+        Local_Pressure_Average,
+        Sea_Level_Pressure_Average,
+        Total_Precipitation,
+        Maximum_1_Hour_Precipitation,
+        Maximum_10_Minute_Precipitation,
+        Average_Temperature,
+        Maximum_Temperature,
+        Minimum_Temperature,
+        Average_Humidity,
+        Minimum_Humidity,
+        Average_Wind_Speed,
+        Maximum_Wind_Speed,
+        Maximum_Wind_Speed_Direction,
+        Maximum_Instantaneous_Wind_Speed,
+        Maximum_Instantaneous_Wind_Speed_Direction,
+        Sunshine_Duration,
+        Total_Snowfall,
+        Maximum_Snow_Depth,
+        Weather_Summary_Daytime,
+        Weather_Summary_Nighttime
         FROM t_weather_log
-        WHERE index_nbr=? and date > ? and date < ?
-        """
+        WHERE index_nbr=? and ymd >= ? and ymd < ?
+        '''
 
         with sqlite3.connect(self.db_file) as conn:  # .dbファイルが無い場合は勝手に作ってくれる
-            conn.row_factory = dict_factory
-            cur = conn.cursor()
-            cur.execute(sql)
-            rows = cur.fetchall()
+            try:
+                conn.row_factory = dict_factory
+                cur = conn.cursor()
+                cur.execute(sql, (index_nbr, from_ymd.strftime(
+                    "%Y-%m-%d"), to_ymd.strftime("%Y-%m-%d")))
+                rows = cur.fetchall()
+
+            except Exception as e:
+                print(e)
+                rows = []
 
         return rows
 
-    def save_whether_log(self, index_nbr: int, data: list):  # dattはdict型でもありリスト型でもあるけど・・・
+    # dattはdict型でもありリスト型でもあるけど・・・
+    def save_whether_log(self, index_nbr: int, fetch_data: list):
         sql = '''
         INSERT INTO t_weather_log (
             index_nbr,
@@ -101,20 +140,23 @@ class AmedasDB():
             Weather_Summary_Nighttime
         )
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        ON CONFLICT (id, ymd)
+        ON CONFLICT (index_nbr, ymd)
         DO NOTHING
         '''
         # タプルのリスト に　変換
         insert_data = []
-        for recode in data:
-            insert_data.append(tuple(recode.values()))
+        print("-----------")
+        print(fetch_data)
+        for recode in range(len(fetch_data)):
+            insert_data.append(tuple(fetch_data[recode].values()))
 
         with sqlite3.connect(self.db_file) as conn:
             try:  # try エラーが起きたら exceptのところにいくという処理
                 cur = conn.cursor()
                 cur.executemany(sql, insert_data)
                 conn.commit()
-            except:
+            except Exception as e:
+                print(e)
                 conn.rollback()
 
 

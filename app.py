@@ -103,6 +103,16 @@ def amedas_data():
 
     return jsonify(response_data)
 
+@app.route("/debug_db")
+def debug_db():
+    from amedas import amedas_api
+    api = amedas_api.Amedas_Api()
+    index_nbr = 47636
+    year = 2024
+    month = 2
+    data=amd.whether_data(index_nbr,year,month)
+    return jsonify(data)
+
 
 @app.route("/debug")
 def debug():

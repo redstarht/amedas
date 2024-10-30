@@ -6,3 +6,5 @@ lesson_venv
 *.csv
 *.json
 *.png
+*.ipynb
+*.sql

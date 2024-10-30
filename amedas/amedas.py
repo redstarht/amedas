@@ -2,6 +2,7 @@ import requests
 from amedas.amedas_db import AmedasDB
 # amedas➡フォルダ名 .db➡db.py
 from amedas.amedas_api import Amedas_Api
+import datetime
 # amedas
 
 
@@ -21,9 +22,9 @@ class Amedas():
         self.db_path = db_path  # インスタンス変数
         self.db = AmedasDB(self.db_path)
         self.api = Amedas_Api()
+    
 
     def whether_data(self, index_nbr: int, year: int, month: int):
-        pass
         # DBへアクセスして引数で指定された 国際地点番号 と 年月データ がDBにあるか確認する
         target_data = self.db.whether_data(index_nbr, year, month)
         # あった場合はデータ返す
@@ -34,13 +35,17 @@ class Amedas():
 
         fetch_data_raw = self.api.fetch_kako_data(index_nbr, year, month)
         fetch_data = []
-        for k, v in fetch_data_raw.items():  # アンパッキング
+        for k, v in fetch_data_raw[list(fetch_data_raw.keys())[0]].items():  # アンパッキング
+            '''
+            地名=list(fetch_data_raw.keys())[0] で地名抜き出し
+            fetch_data_raw[地名]
+            '''
             print(k, v["現地気圧（平均）"])
             print(k, v)
             fetch_data.append(
                 {
                     "id": index_nbr,
-                    "ymd": k,
+                    "ymd": datetime.datetime.strptime(k,"%Y-%m-%d").strftime("%Y-%m-%d"),
                     # 三項演算子
                     "Local_Pressure_(Average)": v["現地気圧（平均）"] if v["現地気圧（平均）"] not in [None, "--"] else "0",
                     "Sea_Level_Pressure_(Average)": v["海面気圧（平均）"] if v["海面気圧（平均）"] not in [None, "--"] else "0",
@@ -64,10 +69,20 @@ class Amedas():
                     "Weather_Summary_(Nighttime)": v["天気概況（夜）"] if v["天気概況（夜）"] not in [None, "--"] else "0"
                 })
         # 取得したデータはDBへ保存
+        print(fetch_data)
         self.db.save_whether_log(index_nbr, fetch_data)
 
-        # 呼び出し元に返す
-        pass
+        target_data = self.db.whether_data(index_nbr, year, month)
+        # あった場合はデータ返す
+        if target_data:
+            return target_data
+
+        # insert_data=[]
+        # for recode in range(len(fetch_data)):
+        #    insert_data.append(tuple(fetch_data[recode].values()))
+
+        # # 呼び出し元に返す
+        # return(insert_data)
 
     def weather_db_check(index_nbr, from_ym, to_ym):
         pass
