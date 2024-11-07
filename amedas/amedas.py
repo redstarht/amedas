@@ -16,13 +16,16 @@ class Amedas():
     DEFAULT_BASE_URL = "https://api.cultivationdata.net/"  # インスタンスする前に使える
     DEFAULT_DB_PATH = "amedas.db"
 
+
     def __init__(self, url: str = DEFAULT_BASE_URL, db_path=DEFAULT_DB_PATH) -> None:  # return で帰ってくるのはNone
         # url = DEFAULT_BASE_URL でurlに引数として何も渡されない場合は DEFAULT_BASE_URLをいれてくれる
         self.base_url = url  # self = インスタンス インスタンス生成時にurlを持たせるようにする
         self.db_path = db_path  # インスタンス変数
         self.db = AmedasDB(self.db_path)
         self.api = Amedas_Api()
-    
+
+    def index_numbers(self):
+        return(self.db.fetch_m_index_nbr())
 
     def whether_data(self, index_nbr: int, year: int, month: int):
         # DBへアクセスして引数で指定された 国際地点番号 と 年月データ がDBにあるか確認する

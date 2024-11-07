@@ -15,6 +15,10 @@ def dict_factory(cursor, row):
 #
 
 
+
+
+
+
 class AmedasDB():
     """
     DBからデータの出し入れのみ実施
@@ -57,6 +61,26 @@ class AmedasDB():
             cur = conn.cursor()
             cur.execute(sql_create_db)
             conn.commit()
+
+    def fetch_m_index_nbr(self):
+        sql_m_index_nbr='''
+        SELECT index_nbr, station_name
+        FROM m_index_nbr
+        '''
+        with sqlite3.connect(self.db_file) as conn:  # .dbファイルが無い場合は勝手に作ってくれる
+                try:
+                    conn.row_factory = dict_factory
+                    conn.text_factory = lambda x: x.decode("sjis")
+                    cur = conn.cursor()
+                    cur.execute(sql_m_index_nbr)
+                    rows = cur.fetchall()
+
+                except Exception as e:
+                    print(e)
+                    rows = []
+
+        return rows
+        
 
     def whether_data(self, index_nbr, year, month) -> list:  # ->アノテーション(型宣言/型注釈)
         from_ymd = datetime.date(year, month, 1)

@@ -12,6 +12,9 @@ app = Flask(__name__)
 def index():
     return render_template("index.html")
 
+@app.route("/amedas")
+def amedas_grafh():
+    return render_template("amedas.html")
 
 @app.route("/menu/<line_code>")
 def menu(line_code):
@@ -26,15 +29,8 @@ def menu(line_code):
 
 @app.route("/index_nbr")
 def index_nbr():
-    result = [
-        {"index_nbr": 100,
-         "station_name": "仮町"},
-        {"index_nbr": 200,
-         "station_name": "kari"}
-
-        # ここのデータをもとにプルダウン作成
-    ]
-    return jsonify(result)
+    result = amd.index_numbers()
+    return jsonify({"result":result})
 
 
 @app.route("/city")

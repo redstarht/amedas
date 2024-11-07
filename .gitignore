@@ -8,3 +8,4 @@ lesson_venv
 *.png
 *.ipynb
 *.sql
+*.md
