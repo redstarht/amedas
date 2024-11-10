@@ -3,8 +3,7 @@ __pycache__
 *.db
 lesson_venv
 *.xlsx
-*.csv
 *.json
 *.png
 *.ipynb
-*.sql
+fix_folder
