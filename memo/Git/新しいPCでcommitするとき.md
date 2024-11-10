@@ -23,13 +23,15 @@ git config user.email "your-email@example.com"
 設定の確認
 設定した内容を確認したい場合は、以下のコマンドで現在のユーザー情報を確認できます：
 
-bash
+```bash
 コードをコピーする
 git config --list
+```
 または特定の設定を確認したい場合は、以下のように指定します：
 
-bash
+```bash
 コードをコピーする
 git config user.name
 git config user.email
 これでユーザー情報が正しく設定され、コミットを実行できるようになります。
+```
