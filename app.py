@@ -12,9 +12,11 @@ app = Flask(__name__)
 def index():
     return render_template("index.html")
 
+
 @app.route("/amedas")
 def amedas_grafh():
     return render_template("amedas.html")
+
 
 @app.route("/menu/<line_code>")
 def menu(line_code):
@@ -30,7 +32,19 @@ def menu(line_code):
 @app.route("/index_nbr")
 def index_nbr():
     result = amd.index_numbers()
-    return jsonify({"result":result})
+    return jsonify({"result": result})
+
+
+@app.route("/submit")
+def submit():
+    # htmlフォームから送信されたデータを取得
+    index_select = request.args.get('index_select',None)
+    from_ym = request.args.get('from_ym',None)
+    to_ym = request.args.get('to_ym',None)
+
+    submit = {"index_select": index_select, "from_ym": from_ym, "to_ym": to_ym}
+    print(submit)
+    return jsonify(submit)
 
 
 @app.route("/city")
@@ -99,6 +113,7 @@ def amedas_data():
 
     return jsonify(response_data)
 
+
 @app.route("/debug_db")
 def debug_db():
     from amedas import amedas_api
@@ -106,7 +121,7 @@ def debug_db():
     index_nbr = 47636
     year = 2024
     month = 2
-    data=amd.whether_data(index_nbr,year,month)
+    data = amd.whether_data(index_nbr, year, month)
     return jsonify(data)
 
 
@@ -132,30 +147,30 @@ def debug():
 
         date_for_db.append(
             (index_nbr, datestr,
-            v['合計降水量'],
-            v['合計降雪'],
-            v['天気概況（夜）'],
-            v['天気概況（昼）'],
-            v['平均気温'],
-            v['平均湿度'],
-            v['平均風速'],
-            v['日照時間'],
-            v['最低気温'],
-            v['最大10分間降水量'],
-            v['最大1時間降水量'],
-            v['最大瞬間風速'],
-            v['最大瞬間風速（風向）'],
-            v['最大風速'],
-            v['最大風速（風向）'],
-            v['最小湿度'],
-            v['最深積雪'],
-            v['最高気温'],
-            v['海面気圧（平均）'],
-            v['現地気圧（平均）']
+             v['合計降水量'],
+             v['合計降雪'],
+             v['天気概況（夜）'],
+             v['天気概況（昼）'],
+             v['平均気温'],
+             v['平均湿度'],
+             v['平均風速'],
+             v['日照時間'],
+             v['最低気温'],
+             v['最大10分間降水量'],
+             v['最大1時間降水量'],
+             v['最大瞬間風速'],
+             v['最大瞬間風速（風向）'],
+             v['最大風速'],
+             v['最大風速（風向）'],
+             v['最小湿度'],
+             v['最深積雪'],
+             v['最高気温'],
+             v['海面気圧（平均）'],
+             v['現地気圧（平均）']
              ))
-    
+
     print(date_for_db)
-    
+
     from amedas import amedas_db
     db = amedas_db.AmedasDB("debug.db")
     db.save_whether_log(index_nbr, date)
