@@ -1,0 +1,1 @@
+DELETE FROM m_index_nbr WHERE index_nbr = 'index_nbr';

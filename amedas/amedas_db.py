@@ -70,7 +70,7 @@ class AmedasDB():
         with sqlite3.connect(self.db_file) as conn:  # .dbファイルが無い場合は勝手に作ってくれる
                 try:
                     conn.row_factory = dict_factory
-                    conn.text_factory = lambda x: x.decode("sjis")
+                    conn.text_factory = lambda x: x.decode("utf-8", errors="ignore")
                     cur = conn.cursor()
                     cur.execute(sql_m_index_nbr)
                     rows = cur.fetchall()
