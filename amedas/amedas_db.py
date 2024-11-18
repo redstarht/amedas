@@ -126,8 +126,10 @@ class AmedasDB():
             try:
                 conn.row_factory = dict_factory
                 cur = conn.cursor()
-                cur.execute(sql, (index_nbr, from_ymd.strftime(
-                    "%Y-%m-%d"), to_ymd.strftime("%Y-%m-%d")))
+                cur.execute(sql,
+                (index_nbr, 
+                 from_ymd.strftime("%Y-%m-%d"),
+                 to_ymd.strftime("%Y-%m-%d")))
                 rows = cur.fetchall()
 
             except Exception as e:

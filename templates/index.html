@@ -43,7 +43,9 @@
     <form id="my_form" method="get">
         <!-- get データをもらうだけ post データを渡す、サーバに送りたい時  -->
         <label for="index_selectr">国際地点番号選択:</label>
-        <select name="index_select" id="index_select"> </select>
+        <select name="index_select" id="index_select"> 
+            <!-- JS上でコンボボックスに表示する値の表示 -->
+        </select>
 
         <label for="from_ym">何年何月から？:</label>
         <input type="date" id="from_ym" name="from_ym" required minlength="4" maxlength="8" size="10" />
@@ -80,6 +82,7 @@
         }
 
         function set_select_index_nbrs(numbers) {
+            // コンボボックスに1行要素を取得し、コンボボックスの一覧に追加
             const select_element = document.getElementById("index_select");
             // 要素が変数に格納されている　<select></select> が格納されている
             // 要素が変数に格納されている　<option></option> が格納されている
@@ -94,6 +97,7 @@
 
         function get_index_nbrs() {
             return fetch('{{url_for("index_nbr")}}')
+            // コンボボックスの一覧表取得
                 .then((response) => {
                     //サーバーから受信出来たら
                     return response.json();
@@ -114,19 +118,23 @@
 
         let click_count = 0;
         function btn_click() {
-            const index_nbr = document.getElementById("index_select").value;
+            
+            const select_element = document.getElementById("index_select").value;
             const from_ym = document.getElementById("from_ym").value;
             const to_ym = document.getElementById("to_ym").value;
             // click_count += 1;
             // console.log(`${click_count}回クリックされた`);
             // document.getElementById("msg").innerText = click_count;
             params = {
-                index_nbr: index_nbr,
+                index_nbr: select_element,
                 from_ym: from_ym,
                 to_ym: to_ym
             }
             const query = new URLSearchParams(params);
+            // new は「新しいオブジェクトのインスタンスを生成する」ための演算子
             let url = `{{url_for("submit")}}?${query}`;
+            // Flaskのurl_for()関数を使用、引数に"submit"というルートのURLを取得
+            // 
 
             fetch(url).then((response) => {
                 console.log(response);

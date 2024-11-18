@@ -26,6 +26,20 @@ class Amedas():
 
     def index_numbers(self):
         return(self.db.fetch_m_index_nbr())
+    
+    def whether_date_range(self,submit_from,submit_to):
+        '''
+        やりたいこと
+        submit_from と submit_to の間の値を月ごとに出力し
+        月単位で amedas_dbのwhether_data関数の中に引数で入れて
+        dataを取ってくる
+        その後、この関数の中で
+        取ってきたdataを結合する   
+        '''
+        target_date=self.db.whether_data(submit_from,submit_to)
+        #入力した年月日範囲を取りに行く
+        target_date = self.db.whether_date()
+        pass
 
     def whether_data(self, index_nbr: int, year: int, month: int):
         # DBへアクセスして引数で指定された 国際地点番号 と 年月データ がDBにあるか確認する

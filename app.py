@@ -1,9 +1,10 @@
 from flask import Flask, render_template, request, jsonify
 import datetime
 from amedas import amedas
-# from amedas.amedas import amedas
+# from amedas.amedas import amedas　➡　from モジュール名 import クラス名
 
 amd = amedas.Amedas(db_path="AAA.db")
+# クラスからオブジェクトのインスタンスを生成
 
 app = Flask(__name__)
 
@@ -30,6 +31,7 @@ def menu(line_code):
 
 
 @app.route("/index_nbr")
+# コンボボックスの一覧表取得
 def index_nbr():
     result = amd.index_numbers()
     return jsonify({"result": result})
@@ -37,14 +39,23 @@ def index_nbr():
 
 @app.route("/submit")
 def submit():
-    # htmlフォームから送信されたデータを取得
-    index_select = request.args.get('index_select',None)
-    from_ym = request.args.get('from_ym',None)
-    to_ym = request.args.get('to_ym',None)
+    # htmlフォームから送信されたデータを取得（引数をなにも入れなくても初期はgetリクエストになっている)
+    index_select = request.args.get('index_nbr',None)
+    # from_ym = request.args.get('from_ym',None)
+    # to_ym = request.args.get('to_ym',None)
+    
+    from_ym=datetime.datetime.strptime(request.args.get('from_ym',None),"%Y-%m-%d")
+    to_ym=datetime.datetime.strptime(request.args.get('to_ym',None),"%Y-%m-%d")
+    from_ym_y=from_ym.year
+    from_ym_m=from_ym.month
+    to_ym_y=to_ym.year
+    to_ym_m=to_ym.month
 
-    submit = {"index_select": index_select, "from_ym": from_ym, "to_ym": to_ym}
-    print(submit)
-    return jsonify(submit)
+    submit_from = {"index_select": index_select, "year": from_ym_y, "month": from_ym_m}
+    submit_to={"index_select": index_select, "year": to_ym_y, "month": to_ym_m}
+    data=amd.whether_date_range(submit_from,submit_to)
+    print(submit_from,"to",submit_to)
+    return jsonify(submit_to)
 
 
 @app.route("/city")
