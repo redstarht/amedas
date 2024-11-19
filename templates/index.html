@@ -48,10 +48,10 @@
         </select>
 
         <label for="from_ym">何年何月から？:</label>
-        <input type="date" id="from_ym" name="from_ym" required minlength="4" maxlength="8" size="10" />
+        <input type="month" id="from_ym" name="from_ym" required minlength="4" maxlength="8" size="10" />
 
         <label for="to_ym">何年何月まで？:</label>
-        <input type="date" id="to_ym" name="to_ym" required minlength="4" maxlength="8" size="10" />
+        <input type="month" id="to_ym" name="to_ym" required minlength="4" maxlength="8" size="10" />
         <button onclick="btn_click()" type="button">決定</button>
 
     </form>
@@ -80,7 +80,7 @@
             });
 
         }
-
+        // 国際地点番号の一覧表表示
         function set_select_index_nbrs(numbers) {
             // コンボボックスに1行要素を取得し、コンボボックスの一覧に追加
             const select_element = document.getElementById("index_select");
@@ -94,7 +94,7 @@
 
             });
         }
-
+        // 国際地点番号の一覧表取得
         function get_index_nbrs() {
             return fetch('{{url_for("index_nbr")}}')
             // コンボボックスの一覧表取得
@@ -117,6 +117,7 @@
 
 
         let click_count = 0;
+        // submitボタンクリック時に値を flaskでapp.pyの/submitへ
         function btn_click() {
             
             const select_element = document.getElementById("index_select").value;

@@ -50,6 +50,7 @@ class Amedas():
                 target_rows.extend(target_data)
             else:
                 fetch_data = []
+                # APIからネストの辞書型データを取得
                 fetch_data_raw=self.api.fetch_kako_data(index_select,year,month)
                 for k, v in fetch_data_raw[list(fetch_data_raw.keys())[0]].items():  # アンパッキング
                     fetch_data.append(
@@ -87,6 +88,7 @@ class Amedas():
             current_date += relativedelta(months=1)
 
         print(target_rows)
+        return target_rows
 
     # from_ym_y = from_ym.year
     # from_ym_m = from_ym.month

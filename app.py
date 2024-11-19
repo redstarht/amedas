@@ -44,8 +44,8 @@ def submit():
     # from_ym = request.args.get('from_ym',None)
     # to_ym = request.args.get('to_ym',None)
     
-    from_ym=datetime.datetime.strptime(request.args.get('from_ym',None),"%Y-%m-%d")
-    to_ym=datetime.datetime.strptime(request.args.get('to_ym',None),"%Y-%m-%d")
+    from_ym=datetime.datetime.strptime(request.args.get('from_ym',None),"%Y-%m")
+    to_ym=datetime.datetime.strptime(request.args.get('to_ym',None),"%Y-%m")
     data=amd.whether_date_range(index_select,from_ym,to_ym)
 
 
