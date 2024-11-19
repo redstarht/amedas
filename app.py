@@ -46,16 +46,21 @@ def submit():
     
     from_ym=datetime.datetime.strptime(request.args.get('from_ym',None),"%Y-%m-%d")
     to_ym=datetime.datetime.strptime(request.args.get('to_ym',None),"%Y-%m-%d")
-    from_ym_y=from_ym.year
-    from_ym_m=from_ym.month
-    to_ym_y=to_ym.year
-    to_ym_m=to_ym.month
+    data=amd.whether_date_range(index_select,from_ym,to_ym)
 
-    submit_from = {"index_select": index_select, "year": from_ym_y, "month": from_ym_m}
-    submit_to={"index_select": index_select, "year": to_ym_y, "month": to_ym_m}
-    data=amd.whether_date_range(submit_from,submit_to)
-    print(submit_from,"to",submit_to)
-    return jsonify(submit_to)
+
+    # from_ym_y=from_ym.year
+    # from_ym_m=from_ym.month
+    # to_ym_y=to_ym.year
+    # to_ym_m=to_ym.month
+
+
+
+    # submit_from = {"index_select": index_select, "year": from_ym_y, "month": from_ym_m}
+    # submit_to={"index_select": index_select, "year": to_ym_y, "month": to_ym_m}
+    # data=amd.whether_date_range(submit_from,submit_to)
+    # print(submit_from,"to",submit_to)
+    return jsonify(data)
 
 
 @app.route("/city")
