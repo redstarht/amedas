@@ -37,6 +37,7 @@ def index_nbr():
     return jsonify({"result": result})
 
 
+# submitのエンドポイントから、GETリクエストで書かれた value を取得
 @app.route("/submit")
 def submit():
     # htmlフォームから送信されたデータを取得（引数をなにも入れなくても初期はgetリクエストになっている)
@@ -61,6 +62,7 @@ def submit():
     # data=amd.whether_date_range(submit_from,submit_to)
     # print(submit_from,"to",submit_to)
     return jsonify(data)
+
 
 
 @app.route("/city")

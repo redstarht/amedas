@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+</body>
+</html>
+
+<script>
+const apiData = [
+    { month: "January", value: 10 },
+    { month: "February", value: 20 },
+    { month: "March", value: 15 },
+    { month: "April", value: 25 }
+];
+
+const labels = apiData.map(item => item.month); // 月の配列を作成
+const data = apiData.map(item => item.value);  // 値の配列を作成
+
+console.log(labels); // ["January", "February", "March", "April"]
+console.log(data);   // [10, 20, 15, 25]
+
+
+
+
+</script>
