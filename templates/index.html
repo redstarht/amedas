@@ -9,7 +9,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='index.css')}}" />
-    <title>Document</title>
+    <title>気象データ取得 (AmedasAPI)</title>
 
     <style>
         #msg {
@@ -33,41 +33,73 @@
 </head>
 
 <body>
-    <div>{{ jikan }}</div>
-    <div>
-        気象庁データ(アメダスAPI)から選択した地域の平均気温が出せます
-    </div>
+    <a href="mailto:game150@live.jp" target="_blank">
+        <img src="/static/images/title.png" alt="タイトルです">
+    </a>
+    <header>
+        <h1>
+            <div>{{ jikan }}</div>
+            <div>
+                気象庁データ(アメダスAPI)から選択した地域の平均気温が出せます
+            </div>
+        </h1>
+    </header>
+
 
     {# <!-- <a href="{{url_for('menu', )}}">メニューページ</a> --> #}
+    <main>
+        <form id="my_form" method="get">
+            <!-- get データをもらうだけ post データを渡す、サーバに送りたい時  -->
+            <label for="index_selectr">国際地点番号選択:</label>
+            <select name="index_select" id="index_select">
+                <!-- JS上でコンボボックスに表示する値の表示 -->
+            </select>
 
-    <form id="my_form" method="get">
-        <!-- get データをもらうだけ post データを渡す、サーバに送りたい時  -->
-        <label for="index_selectr">国際地点番号選択:</label>
-        <select name="index_select" id="index_select">
-            <!-- JS上でコンボボックスに表示する値の表示 -->
-        </select>
+            <label for="from_ym">何年何月から？:</label>
+            <input type="month" id="from_ym" name="from_ym" required minlength="4" maxlength="8" size="10" />
 
-        <label for="from_ym">何年何月から？:</label>
-        <input type="month" id="from_ym" name="from_ym" required minlength="4" maxlength="8" size="10" />
+            <label for="to_ym">何年何月まで？:</label>
+            <input type="month" id="to_ym" name="to_ym" required minlength="4" maxlength="8" size="10" />
+            <button onclick="btn_click()" type="button">決定</button>
 
-        <label for="to_ym">何年何月まで？:</label>
-        <input type="month" id="to_ym" name="to_ym" required minlength="4" maxlength="8" size="10" />
-        <button onclick="btn_click()" type="button">決定</button>
-
-    </form>
-
-    <div>
+        </form>
         <button onclick="btn_click();" class="mybtn">ボタン</button>
-    </div>
-
-    <div>
         <label id="msg">-</label>
+        <div class="chart-board">
+            <canvas id="myChart"></canvas>
+        </div>
+    </main>
+    <aside>
+        <ol>
+            <li>地点名</li>
+            <li>国際地点番号</li>
+        </ol>
+        <div>
+            <table id="data-table" border="1">
+                <theaed>
+                    <tr>
+                        <th>地点名</th>
+                        <th>国際地点番号</th>
+                    </tr>
 
-    </div>
+                </theaed>
+                <tbody>
+                    <!-- データ格納部分 -->
+                </tbody>
+            </table>
+        </div>
 
-    <div class="chart-board">
-        <canvas id="myChart"></canvas>
-    </div>
+        <div>
+
+            E-mail:
+            <input type="email" name="freewrite" placeholder="入力願います">
+            名前：
+            <input type="text" name="freewrite" placeholder="入力">
+            <textarea name="freewrite" placeholder=" = 入力"></textarea>
+            <button onclick="btn_click()" type="button">送信</button>
+
+        </div>
+    </aside>
 
     <script>
         fetch_data = null;
@@ -77,6 +109,7 @@
         // Page読み込みパターンに対応　書き方は三項演算子
         // init() 即座に実行 init 関数を登録
         function init() {
+            // get index nbrs関数からデータを取得し、set select index nbrs関数の引数に格納
             get_index_nbrs().then((data) => {
                 set_select_index_nbrs(data);
             });
@@ -86,6 +119,7 @@
         function set_select_index_nbrs(numbers) {
             // コンボボックスに1行要素を取得し、コンボボックスの一覧に追加
             const select_element = document.getElementById("index_select");
+            // numbersの結果がitemに格納され、valueとtextに分けられて、option elementへ格納
             // 要素が変数に格納されている　<select></select> が格納されている
             // 要素が変数に格納されている　<option></option> が格納されている
             numbers.result.forEach(item => {
@@ -157,6 +191,7 @@
                             const x_values = fetch_data.map(item => item.ymd);
                             const y_values = fetch_data.map(item => item.Average_Temperature)
                             console.log(y_values)
+                            // ↓イベントハンドラー属性 change が引数に
                             selectElement.addEventListener("change", function () {
                                 const selectedOption = selectElement.options[selectElement.selectedIndex];
                                 selectedText = selectedOption.text;
@@ -166,7 +201,7 @@
 
                             })
 
-                            
+
 
                             var dlg_goods_detail_chart1 = new Chart(ctx, {
                                 type: "line",
