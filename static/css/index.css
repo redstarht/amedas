@@ -1,0 +1,38 @@
+@charset "utf-8";
+
+header {
+    color: red;
+    font-size: 20;
+    font-weight: bold;
+    text-align: center;
+
+}
+
+form {
+    background-color: darkkhaki;
+
+
+}
+
+/* .を先頭に入れるのはclass= のやつ */
+.mybtn {
+    background-color: chocolate;
+}
+
+#msg {
+    font-size: xx-large;
+    color: blue;
+}
+
+/* #はidを指定 */
+.chart-board {
+    /* .はclassを指定 */
+    max-width: 80vw;
+    max-height: 50vh;
+}
+
+/* 何もないときは ラベル要素全てに指定する*/
+label {
+    color: blueviolet;
+    /* */
+}
