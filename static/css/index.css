@@ -8,6 +8,14 @@ header {
 
 }
 
+body {
+background-image: url("/static/images/istockphoto-1172556865-612x612.jpg");
+background-repeat: repeat;
+background-size: contain;
+background-position: center;
+
+}
+
 form {
     background-color: darkkhaki;
 
